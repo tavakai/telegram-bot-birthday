@@ -34,7 +34,7 @@ async function checkDateBirth(today, listOfBirthdays) {
 	})
 }
 
-cron.schedule('0 01 00 * * *', async () => {
+cron.schedule('0 35 02 * * *', async () => {
 	const fullDate = new Date().toLocaleDateString('ru-RU', timeZone)
 	const parts = fullDate.split('.') // Разбиваем строку по точкам
 	const today = parts[0] + '.' + parts[1];  // Объединяем день и месяц в одну строку
