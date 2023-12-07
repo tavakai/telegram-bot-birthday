@@ -48,3 +48,5 @@ bot.onText(/\/start/, (msg) => {
 
 	bot.sendMessage(chatId, welcomeMessage)
 })
+
+console.log('Bot success start')
