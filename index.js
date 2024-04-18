@@ -1,52 +1,21 @@
 const TelegramBot = require('node-telegram-bot-api')
 const cron = require('node-cron')
-const messages = require('./messages.json')
-const congrats = require('./congratulations.json')
-const listOfBirthdays = require('./birthdays.js')
-const { TOKEN, GROUP_ID } = require('./constants.js')
+const messages = require('./src/telegram/messages.json')
+const {cronObserver} = require("./src/telegram/modules/birthday")
+const { START } = require('./src/telegram/commands')
+const {startCheckPolling} = require("./src/telegram/utils");
+require('dotenv').config()
 
-const timeZone = { timeZone: 'Europe/Moscow' }
+const { TOKEN } = process.env
+const BOT = new TelegramBot(TOKEN, { polling: true })
 
-const bot = new TelegramBot(TOKEN, { polling: true })
+cron.schedule('0 01 00 * * *', cronObserver)
 
-// Возвращает рандомный текст поздравления из файла congratulations.json
-const randomCongratulation = () => {
-	const max = Object.keys(congrats).length
-	const rand = Math.floor(Math.random() * (max - 1 + 1)) + 1
-	return congrats[rand]
-}
-
-// проверка дней рождения с текущей датой
-async function checkDateBirth(today, listOfBirthdays) {
-	listOfBirthdays.forEach((el) => {
-	
-		let result;
-		if (el.date === today) {
-			if (el.name.length > 1) {
-				result = el.name.join(' и ')
-			} else {
-				result = el.name
-			}
-			const congratulation = randomCongratulation();
-			const message = `🎉 Сегодня ${today} у ${result} День Рождения! 🎂\n\n${congratulation}`;
-			bot.sendMessage(GROUP_ID, message, { chat_id: GROUP_ID, type: 'group' });
-		} 
-	})
-}
-
-cron.schedule('0 01 00 * * *', async () => {
-	const fullDate = new Date().toLocaleDateString('ru-RU', timeZone)
-	const parts = fullDate.split('.') // Разбиваем строку по точкам
-	const today = parts[0] + '.' + parts[1];  // Объединяем день и месяц в одну строку
-	
-	await checkDateBirth(today, listOfBirthdays)
-})
-
-bot.onText(/\/start/, (msg) => {
+BOT.onText(START, (msg) => {
 	const chatId = msg.chat.id
 	const welcomeMessage = messages.greetings.start
 
-	bot.sendMessage(chatId, welcomeMessage)
+	BOT.sendMessage(chatId, welcomeMessage)
 })
 
-console.log('Bot success start')
+startCheckPolling(BOT)
