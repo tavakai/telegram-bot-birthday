@@ -18,14 +18,9 @@ BOT.onText(START, (msg) => {
 })
 
 cron.schedule('0 01 00 * * *', cronObserver)
+
 BOT.on(MESSAGE, (msg) => {
 	messagesObserver(BOT, msg)
 })
-
-
-// BOT.onText(GET_MESSAGES, async (msg) => {
-// 	const messagesCount = await TotalMessage.findOne()
-// 	BOT.sendMessage(msg.chat.id, `Отправлено сообщений - ${messagesCount.total}`)
-// })
 
 startCheckPolling(BOT)

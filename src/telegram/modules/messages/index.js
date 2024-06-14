@@ -13,6 +13,16 @@ const messagesCounter = async () => {
   }
 }
 
+const getTotalMessagesCount = async (BOT, msg) => {
+  try {
+    let totalMessagesCount = await TotalMessage.findOne()
+    BOT.sendMessage(msg.chat.id, `Отправлено сообщений - ${totalMessagesCount.total}`)
+  } catch (error) {
+    console.error('Error:', error)
+  }
+}
+
 module.exports = {
   messagesCounter,
+  getTotalMessagesCount,
 }

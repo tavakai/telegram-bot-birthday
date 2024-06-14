@@ -1,5 +1,6 @@
 const { cronObserver } = require('./modules/birthday')
-const { messagesCounter } = require('./modules/messages')
+const { messagesCounter, getTotalMessagesCount } = require('./modules/messages')
+const { TOTAL_MSG_COUNT } = require('./commands')
 
 const messagesObserver = (bot, msg) => {
   messagesCounter()
@@ -11,6 +12,13 @@ const messagesObserver = (bot, msg) => {
    voice
   } = msg
   const chatId = msg.chat.id
+  console.log({
+    text: msg.text,
+    'msg.text === TOTAL_MSG_COUNT': msg.text === TOTAL_MSG_COUNT
+  })
+  if (msg.text === TOTAL_MSG_COUNT) {
+    getTotalMessagesCount(bot, msg)
+  }
 
   if (text) {
     // Do something if text
