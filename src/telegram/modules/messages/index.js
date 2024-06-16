@@ -1,28 +1,32 @@
-const { TotalMessage } = require("../../../../db/models")
+const { TotalMessage, User } = require("../../../../db/models")
 
-const messagesCounter = async () => {
+const getStats = async (BOT, msg) => {
   try {
-    let totalMessage = await TotalMessage.findOne()
-    if (!totalMessage) {
-      await TotalMessage.create({ total: 1 })
-    } else {
-      await TotalMessage.update({ total: totalMessage.total + 1 }, { where: { id: totalMessage.id } })
-    }
-  } catch (error) {
-    console.error('Error:', error)
-  }
-}
+    const totalMessagesCount = await TotalMessage.findOne()
+    const totalStickersCount = await User.sum('stickers_count')
+    const totalAnimationsCount = await User.sum('animation_count')
 
-const getTotalMessagesCount = async (BOT, msg) => {
-  try {
-    let totalMessagesCount = await TotalMessage.findOne()
-    BOT.sendMessage(msg.chat.id, `Отправлено сообщений - ${totalMessagesCount.total}`)
+    const topUsers = await User.findAll({
+      order: [['msgs_count', 'DESC']],
+      limit: 3,
+    })
+
+    let response = `Общая статистика:\n`
+    response += `Cообщений: ${totalMessagesCount.total}\n`
+    response += `Стикеры: ${totalStickersCount}\n`
+    response += `Анимации: ${totalAnimationsCount}\n\n`
+    response += `Топ-3 участников по количеству сообщений:\n`
+
+    topUsers.forEach((user, index) => {
+      response += `${index + 1}. ${user.first_name || user.username}: ${user.msgs_count} сообщений\n`;
+    })
+
+    BOT.sendMessage(msg.chat.id, response)
   } catch (error) {
     console.error('Error:', error)
   }
 }
 
 module.exports = {
-  messagesCounter,
-  getTotalMessagesCount,
+  getStats,
 }

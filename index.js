@@ -1,7 +1,7 @@
 const TelegramBot = require('node-telegram-bot-api')
 const cron = require('node-cron')
 const messages = require('./src/telegram/messages.json')
-const { cronObserver, messagesObserver } = require("./src/telegram")
+const { cronObserver, statsObserver } = require("./src/telegram")
 const { START, MESSAGE } = require('./src/telegram/commands')
 const { startCheckPolling } = require("./src/telegram/utils")
 require('dotenv').config()
@@ -20,7 +20,7 @@ BOT.onText(START, (msg) => {
 cron.schedule('0 01 00 * * *', cronObserver)
 
 BOT.on(MESSAGE, (msg) => {
-	messagesObserver(BOT, msg)
+	statsObserver(BOT, msg)
 })
 
 startCheckPolling(BOT)
