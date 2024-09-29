@@ -34,9 +34,7 @@ const cronObserver = async (bot) => {
   const fullDate = new Date().toLocaleDateString('ru-RU', timeZone)
   const parts = fullDate.split('.') // Разбиваем строку по точкам
   const today = parts[0] + '.' + parts[1];  // Объединяем день и месяц в одну строку
-  console.log({
-    today,
-  })
+
   await checkDateBirth(bot, today, listOfBirthdays)
 }
 

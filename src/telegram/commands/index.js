@@ -3,5 +3,5 @@ module.exports = {
   STOP: /\/stop/,
   MESSAGE: 'message',
   GET_MESSAGES: /\/get-messages/,
-  STATS: '/stats',
+  STATS: /\/stats/,
 }

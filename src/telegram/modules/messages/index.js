@@ -14,7 +14,7 @@ const sendStatsMessage = async (BOT, msg) => {
     response += `Cообщений отправлено: ${totalMessagesCount}\n`
     response += `Стикеры: ${totalStickersCount}\n`
     response += `Анимации: ${totalAnimationsCount}\n\n`
-    response += `Топ-3 участников по количеству сообщений:\n`
+    response += `Топ-5 участников по количеству сообщений:\n`
 
     topUsers.forEach((user, index) => {
       response += `${index + 1}. ${user.first_name || user.username}: ${user.msgs_count} сообщений\n`;

@@ -1,7 +1,8 @@
 const { cronObserver } = require('./modules/birthday')
 const { sendStatsMessage } = require('./modules/messages')
 const { updateStats } = require("./modules/messages/helpers");
-const { STATS } = require('./commands')
+const { STATS, START } = require('./commands')
+const {isCommandType} = require("./utils");
 
 const getMediaFile = async (bot, fileId) => {
   try {
@@ -15,9 +16,11 @@ const getMediaFile = async (bot, fileId) => {
 }
 
 const statsObserver = async (bot, msg) => {
+  const message = msg.text
   await updateStats(msg)
   // getMediaFile(bot, msg.document.file_id)
-  if (msg.text === STATS) {
+
+  if (message === STATS) {
     await sendStatsMessage(bot, msg)
   }
 }
