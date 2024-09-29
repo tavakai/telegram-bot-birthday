@@ -1,18 +1,17 @@
-const { TotalMessage, User } = require("../../../../db/models")
+const { getStats, getUserAvatar } = require('./helpers')
 
-const getStats = async (BOT, msg) => {
+const sendStatsMessage = async (BOT, msg) => {
   try {
-    const totalMessagesCount = await TotalMessage.findOne()
-    const totalStickersCount = await User.sum('stickers_count')
-    const totalAnimationsCount = await User.sum('animation_count')
+    const {
+      totalMessagesCount,
+      totalStickersCount,
+      totalAnimationsCount,
+      topUsers,
+    } = await getStats()
 
-    const topUsers = await User.findAll({
-      order: [['msgs_count', 'DESC']],
-      limit: 3,
-    })
+    let response = `Общая статистика чата\n`
 
-    let response = `Общая статистика:\n`
-    response += `Cообщений: ${totalMessagesCount.total}\n`
+    response += `Cообщений отправлено: ${totalMessagesCount}\n`
     response += `Стикеры: ${totalStickersCount}\n`
     response += `Анимации: ${totalAnimationsCount}\n\n`
     response += `Топ-3 участников по количеству сообщений:\n`
@@ -28,5 +27,5 @@ const getStats = async (BOT, msg) => {
 }
 
 module.exports = {
-  getStats,
+  sendStatsMessage,
 }

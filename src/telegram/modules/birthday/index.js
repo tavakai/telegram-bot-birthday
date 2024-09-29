@@ -30,12 +30,14 @@ async function checkDateBirth(bot, today, listOfBirthdays) {
   })
 }
 
-const cronObserver = async () => {
+const cronObserver = async (bot) => {
   const fullDate = new Date().toLocaleDateString('ru-RU', timeZone)
   const parts = fullDate.split('.') // Разбиваем строку по точкам
   const today = parts[0] + '.' + parts[1];  // Объединяем день и месяц в одну строку
-
-  await checkDateBirth(today, listOfBirthdays)
+  console.log({
+    today,
+  })
+  await checkDateBirth(bot, today, listOfBirthdays)
 }
 
 module.exports = {

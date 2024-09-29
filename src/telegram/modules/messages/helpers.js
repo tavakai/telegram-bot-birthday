@@ -23,9 +23,12 @@ const updateStats = async (msg) => {
       },
     })
 
-    if (msg_type === MESSAGE_TYPE.text) user.msgs_count += 1
     if (msg_type === MESSAGE_TYPE.sticker) user.stickers_count += 1
-    if (msg_type === MESSAGE_TYPE.animation) user.animation_count += 1
+    if (msg_type === MESSAGE_TYPE.animation) {
+      user.animation_count += 1
+      // console.log(msg)
+    }
+    user.msgs_count += 1
 
     user.first_name = last_name ? `${first_name} ${last_name}` : first_name
     await user.save()
@@ -34,7 +37,40 @@ const updateStats = async (msg) => {
   }
 }
 
+const getStats = async () => {
+  try {
+    const totalMessagesCount = await TotalMessage.findOne()
+    const totalStickersCount = await User.sum('stickers_count')
+    const totalAnimationsCount = await User.sum('animation_count')
+
+    const topUsersByTotalMessages = await User.findAll({
+      order: [['msgs_count', 'DESC']],
+      limit: 5,
+    })
+
+    return {
+      totalMessagesCount: totalMessagesCount.total,
+      totalStickersCount,
+      totalAnimationsCount,
+      topUsersByTotalMessages,
+    }
+  } catch (error) {
+    console.error('Error:', error)
+  }
+}
+
+const getUserAvatar = async (bot) => {
+  try {
+    const userImage = await bot.getUserProfilePhotos(474573662, 1)
+    console.log(userImage)
+  } catch (err) {
+    console.error('Error:', err)
+  }
+}
+
 module.exports = {
   getMessageType,
-  updateStats
+  getStats,
+  updateStats,
+  getUserAvatar
 }
