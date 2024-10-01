@@ -9,7 +9,7 @@ require('dotenv').config()
 const { TOKEN } = process.env
 const BOT = new TelegramBot(TOKEN, { polling: true })
 
-cron.schedule('0 05 22 * * *', () => cronObserver(BOT))
+cron.schedule('0 02 00 * * *', () => cronObserver(BOT))
 
 BOT.onText(START, (msg) => {
 	const chatId = msg.chat.id
