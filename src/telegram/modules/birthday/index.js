@@ -2,7 +2,7 @@ const congrats = require('./congratulations.json')
 const listOfBirthdays = require('./birthdays')
 require('dotenv').config()
 
-const { TEST_GROUP_ID } = process.env
+const { GROUP_ID } = process.env
 const timeZone = { timeZone: 'Europe/Moscow' }
 
 // Возвращает рандомный текст поздравления из файла congratulations.json
@@ -25,7 +25,7 @@ async function checkDateBirth(bot, today, listOfBirthdays) {
       }
       const congratulation = randomCongratulation();
       const message = `🎉 Сегодня ${today} у ${result} День Рождения! 🎂\n\n${congratulation}`;
-      bot.sendMessage(TEST_GROUP_ID, message, { chat_id: TEST_GROUP_ID, type: 'group' });
+      bot.sendMessage(GROUP_ID, message, { chat_id: GROUP_ID, type: 'group' });
     }
   })
 }

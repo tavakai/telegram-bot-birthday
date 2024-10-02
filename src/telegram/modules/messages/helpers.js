@@ -10,7 +10,10 @@ const getMessageType = (msg) => {
 
 const updateStats = async (msg) => {
   try {
-    let totalMessage = await TotalMessage.findOne()
+    const [totalMessage] = await TotalMessage.findOrCreate({
+      where: { id: 1 }, // Предполагаем, что у нас будет только одна запись с id = 1
+      defaults: { total: 0 },
+    })
     totalMessage.total += 1
     await totalMessage.save()
 

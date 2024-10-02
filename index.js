@@ -2,15 +2,16 @@ const express = require('express')
 const cors = require('cors')
 const TelegramBot = require('node-telegram-bot-api')
 const cron = require('node-cron')
+const { exec } = require('child_process')
 const messages = require('./src/telegram/messages.json')
 const { cronObserver, statsObserver } = require("./src/telegram")
-const { START, MESSAGE, STATS } = require('./src/telegram/commands')
+const { START, MESSAGE, STATS, RUN_TESTS} = require('./src/telegram/commands')
 const { startCheckPolling } = require("./src/telegram/utils")
 const { getStats, getUserAvatar} = require("./src/telegram/modules/messages/helpers")
 require('dotenv').config()
 
-const { TEST_TOKEN, PORT, WEB_APP_URL } = process.env
-const BOT = new TelegramBot(TEST_TOKEN, { polling: true })
+const { TOKEN, PORT, WEB_APP_URL } = process.env
+const BOT = new TelegramBot(TOKEN, { polling: true })
 const app = express()
 
 app.use(express.json())
@@ -46,6 +47,19 @@ BOT.onText(STATS,  async (msg) => {
 	}
 })
 
+BOT.onText(RUN_TESTS,  async (msg) => {
+	const chatId = msg.chat.id
+	await BOT.sendMessage(chatId, `🚀 Тесты запущены. Ожидайте завершения.`)
+
+	exec('npm test', (error, stdout, stderr) => {
+		if (error) {
+			BOT.sendMessage(chatId, `🆘 Тесты не прошли\n----------\n${stderr}`)
+			return
+		}
+		BOT.sendMessage(chatId, `🟢 Все тесты прошли успешно\n----------\n${stdout}`)
+	})
+})
+
 // Наблюдаем за временем и вызываем метод cronObserver (для дней рождения)
 cron.schedule('0 02 00 * * *', () => cronObserver(BOT))
 
@@ -54,14 +68,9 @@ BOT.on(MESSAGE, (msg) => statsObserver(BOT, msg))
 
 // Обработчики запросов
 app.get('/stats', async (req, res) => {
-	const stats = await getStats(BOT, TEST_TOKEN)
+	const stats = await getStats(BOT, TOKEN)
 	res.setHeader('Content-Type', 'application/json')
 	res.json(stats)
-})
-app.get('/avatar', async (req, res) => {
-	const avatar = await getUserAvatar(BOT, 474573662, TEST_TOKEN)
-	res.setHeader('Content-Type', 'application/json')
-	res.json({ avatar })
 })
 app.get('/me', async (req, res) => {
 	const me = await BOT.getMe()

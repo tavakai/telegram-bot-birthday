@@ -1,4 +1,4 @@
-const { getStats, getUserAvatar } = require('./helpers')
+const { getStats } = require('./helpers')
 
 const sendStatsMessage = async (BOT, msg) => {
   try {
