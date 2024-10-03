@@ -10,14 +10,16 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       first_name: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        defaultValue: '',
       },
       msgs_count: {
         type: Sequelize.INTEGER,
         defaultValue: 0
       },
       tg_user_id: {
-        type: Sequelize.INTEGER
+        type: Sequelize.BIGINT,
+        unique: true,
       },
       animation_count: {
         type: Sequelize.INTEGER,

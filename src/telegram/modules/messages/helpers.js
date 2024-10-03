@@ -25,7 +25,7 @@ const updateStats = async (msg) => {
       defaults: { tg_user_id: msg_author_tg_id },
     })
 
-    const handleMedia = async (mediaType, model, userField, mediaField, fileId) => {
+    const handleMedia = async (model, userField, mediaField, fileId) => {
       const [media] = await model.findOrCreate({
         where: { file_id: fileId },
         defaults: { file_id: fileId }
@@ -36,11 +36,11 @@ const updateStats = async (msg) => {
     }
 
     if (msg_type === MESSAGE_TYPE.sticker) {
-      await handleMedia('sticker', Stickers, 'stickers_count', 'file_id', msg.sticker?.file_id)
+      await handleMedia(Stickers, 'stickers_count', 'file_id', msg.sticker?.file_id)
     }
 
     if (msg_type === MESSAGE_TYPE.animation) {
-      await handleMedia('animation', Animation, 'animation_count', 'file_id', msg.animation?.file_id)
+      await handleMedia(Animation, 'animation_count', 'file_id', msg.animation?.file_id)
     }
 
     user.msgs_count += 1

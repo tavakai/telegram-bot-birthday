@@ -1,7 +1,7 @@
 const { cronObserver } = require('./modules/birthday')
 const { sendStatsMessage } = require('./modules/messages')
 const { updateStats } = require("./modules/messages/helpers");
-const { STATS, START } = require('./commands')
+const { STATS } = require('./commands')
 
 /*
  * Создаем буфер сообщений, который будет периодически обрабатываться
@@ -11,7 +11,7 @@ const { STATS, START } = require('./commands')
 
 let messagesBuffer = []
 let batchTimer = null
-const BATCH_INTERVAL = 10000
+const BATCH_INTERVAL = 5000
 
 const processMessageBatch = async () => {
   if (messagesBuffer.length === 0) {
@@ -22,8 +22,10 @@ const processMessageBatch = async () => {
 
   console.log(`Processing ${messagesBuffer.length} messages in batch...`)
 
-  for (const msg of messagesBuffer) {
-    await updateStats(msg)
+  try {
+    await Promise.all(messagesBuffer.map((msg) => updateStats(msg)))
+  } catch (error) {
+    console.error("Error processing batch:", error)
   }
   messagesBuffer = []
 }

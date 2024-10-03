@@ -16,7 +16,7 @@ module.exports = (sequelize, DataTypes) => {
   User.init({
     first_name: DataTypes.STRING,
     msgs_count: DataTypes.INTEGER,
-    tg_user_id: DataTypes.INTEGER,
+    tg_user_id: DataTypes.BIGINT,
     animation_count: DataTypes.INTEGER,
     stickers_count: DataTypes.INTEGER
   }, {

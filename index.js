@@ -7,7 +7,7 @@ const messages = require('./src/telegram/messages.json')
 const { cronObserver, statsObserver } = require("./src/telegram")
 const { START, MESSAGE, STATS, RUN_TESTS} = require('./src/telegram/commands')
 const { startCheckPolling } = require("./src/telegram/utils")
-const { getStats, getUserAvatar} = require("./src/telegram/modules/messages/helpers")
+const { getStats } = require("./src/telegram/modules/messages/helpers")
 require('dotenv').config()
 
 const { TOKEN, PORT, WEB_APP_URL } = process.env
@@ -35,12 +35,12 @@ BOT.onText(STATS,  async (msg) => {
 	const opts = {
 		reply_markup: {
 			inline_keyboard: [
-				[{ text: 'Open Web App', web_app: { url: WEB_APP_URL } }]
+				[{ text: 'Смотреть', web_app: { url: WEB_APP_URL } }]
 			]
 		}
 	}
 	try {
-		await BOT.sendMessage(msg.chat.id, "Welcome to the bot!", opts)
+		await BOT.sendMessage(msg.chat.id, 'messages.newYearCongrats', opts)
 		console.log(`Message sent to ${chatId} with web app button.`)
 	} catch (error) {
 		console.error(`Failed to send message to ${chatId}:`, error)
